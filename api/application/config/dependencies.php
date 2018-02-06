@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use App\Client\ElasticaClient;
+use App\Client\MemcachedClient;
 use App\Client\PredisClient;
 use App\Service\Logger;
 use Monolog\Handler\StreamHandler;
@@ -50,5 +51,15 @@ $c->offsetSet(
                 'port' => 6379
             ]
         );
+    }
+);
+
+$c->offsetSet(
+    MemcachedClient::class,
+    function (Container $c) {
+        $client = new MemcachedClient();
+        $client->addServer('memcached', 11211, 0);
+
+        return $client;
     }
 );
