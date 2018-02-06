@@ -2,7 +2,9 @@ FROM php:7.1-fpm
 
 RUN apt-get update && apt-get install -y \
     git \
-    unzip
+    unzip \
+    libz-dev \
+    libmemcached-dev
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer --version
@@ -14,7 +16,11 @@ RUN "date"
 RUN docker-php-ext-install pdo pdo_mysql bcmath
 
 RUN pecl install xdebug
+RUN pecl install memcached
+
 RUN docker-php-ext-enable xdebug
+
+RUN echo extension=memcached.so >> /usr/local/etc/php/conf.d/memcached.ini
 RUN echo "error_reporting = E_ALL" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN echo "display_startup_errors = On" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN echo "display_errors = On" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
