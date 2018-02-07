@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use App\Client\AMQPClient;
 use App\Client\ElasticaClient;
 use App\Client\MemcachedClient;
 use App\Client\PredisClient;
@@ -59,6 +60,15 @@ $c->offsetSet(
     function (Container $c) {
         $client = new MemcachedClient();
         $client->addServer('memcached', 11211, 0);
+
+        return $client;
+    }
+);
+
+$c->offsetSet(
+    AMQPClient::class,
+    function (Container $c) {
+        $client = new AMQPClient('rabbitmq', 5672, 'guest', 'guest');
 
         return $client;
     }
