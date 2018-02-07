@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use App\Client\AMQPClient;
+use App\Client\DoctrineConnection;
 use App\Client\ElasticaClient;
 use App\Client\MemcachedClient;
 use App\Client\PredisClient;
@@ -71,5 +72,22 @@ $c->offsetSet(
         $client = new AMQPClient('rabbitmq', 5672, 'guest', 'guest');
 
         return $client;
+    }
+);
+
+$c->offsetSet(
+    DoctrineConnection::class,
+    function (Container $c) {
+        return \Doctrine\DBAL\DriverManager::getConnection(
+            [
+                'dbname' => 'mydb',
+                'user' => 'user',
+                'password' => 'pass',
+                'host' => 'mysql',
+                'driver' => 'pdo_mysql',
+                'wrapperClass' => DoctrineConnection::class
+            ],
+            new \Doctrine\DBAL\Configuration()
+        );
     }
 );
