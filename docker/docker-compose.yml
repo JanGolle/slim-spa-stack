@@ -35,6 +35,8 @@ services:
     build: nginx
     ports:
       - 1934:80
+    links:
+      - php
     volumes:
       - ${APP_PATH}:/var/www/slimspa/app
       - ${API_PATH}:/var/www/slimspa/api
