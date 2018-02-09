@@ -33,7 +33,8 @@ $c->offsetSet(
                 [
                     'connections' => [
                         [
-                            'host' => 'elasticsearch'
+                            'host' => getenv('ELASTICSEARCH_HOST'),
+                            'port' => getenv('ELASTICSEARCH_PORT'),
                         ]
                     ]
                 ],
@@ -49,8 +50,8 @@ $c->offsetSet(
     function (Container $c) {
         return new PredisClient(
             [
-                'host' => 'redis',
-                'port' => 6379
+                'host' => getenv('REDIS_HOST'),
+                'port' => getenv('REDIS_PORT'),
             ]
         );
     }
@@ -60,7 +61,11 @@ $c->offsetSet(
     MemcachedClient::class,
     function (Container $c) {
         $client = new MemcachedClient();
-        $client->addServer('memcached', 11211, 0);
+        $client->addServer(
+            getenv('MEMCACHED_HOST'),
+            (int) getenv('MEMCACHED_PORT'),
+            0
+        );
 
         return $client;
     }
@@ -69,7 +74,12 @@ $c->offsetSet(
 $c->offsetSet(
     AMQPClient::class,
     function (Container $c) {
-        $client = new AMQPClient('rabbitmq', 5672, 'guest', 'guest');
+        $client = new AMQPClient(
+            getenv('RABBITMQ_HOST'),
+            (int) getenv('RABBITMQ_PORT'),
+            getenv('RABBITMQ_USER'),
+            getenv('RABBITMQ_PASSWORD')
+        );
 
         return $client;
     }
@@ -80,10 +90,10 @@ $c->offsetSet(
     function (Container $c) {
         return \Doctrine\DBAL\DriverManager::getConnection(
             [
-                'dbname' => 'mydb',
-                'user' => 'user',
-                'password' => 'pass',
-                'host' => 'mysql',
+                'dbname' => getenv('MYSQL_DATABASE'),
+                'user' => getenv('MYSQL_USER'),
+                'password' => getenv('MYSQL_PASSWORD'),
+                'host' => getenv('MYSQL_HOST'),
                 'driver' => 'pdo_mysql',
                 'wrapperClass' => DoctrineConnection::class
             ],

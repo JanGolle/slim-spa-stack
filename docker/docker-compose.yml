@@ -1,34 +1,48 @@
-version: '2'
+version: '3'
 
 services:
   php:
     build: php
     ports:
       - 9000:9000
-    depends_on:
-      - mysql
-      - redis
-      - memcached
-      - elasticsearch
-      - rabbitmq
+    links:
+      - mysql:${MYSQL_HOST}
+      - redis:${REDIS_HOST}
+      - memcached:${MEMCACHED_HOST}
+      - elasticsearch:${ELASTICSEARCH_HOST}
+      - rabbitmq:${RABBITMQ_HOST}
     volumes:
       - ${APP_PATH}:/var/www/slimspa/app
       - ${API_PATH}:/var/www/slimspa/api
       - ./logs/slimspa:/var/www/slimspa/api/logs
     environment:
       DEV_STAGE: ${DEV_STAGE}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      MEMCACHED_HOST: ${MEMCACHED_HOST}
+      MEMCACHED_PORT: ${MEMCACHED_PORT}
+      ELASTICSEARCH_HOST: ${ELASTICSEARCH_HOST}
+      ELASTICSEARCH_PORT: ${ELASTICSEARCH_PORT}
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_PORT: ${RABBITMQ_PORT}
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
   nginx:
     build: nginx
     ports:
       - 1934:80
-    volumes_from:
-      - php
     volumes:
+      - ${APP_PATH}:/var/www/slimspa/app
+      - ${API_PATH}:/var/www/slimspa/api
       - ./logs/nginx/:/var/log/nginx
   mysql:
     image: mysql:5.7
     volumes:
-      - "./.data/db:/var/lib/mysql"
+      - ./.data/db:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -37,18 +51,21 @@ services:
   redis:
     image: redis:alpine
     ports:
-      - 6379:6379
+      - ${REDIS_PORT}:6379
   memcached:
     image: memcached:alpine
     ports:
-      - 11211:11211
+      - ${MEMCACHED_PORT}:11211
   elasticsearch:
     image: elasticsearch:alpine
     ports:
-      - 9200:9200
-      - 9300:9300
+      - ${ELASTICSEARCH_PORT}:9200
+      - 9300:9300 #node communication
   rabbitmq:
-    image: rabbitmq:3.6.1-management
+    image: rabbitmq:3.7.3-management-alpine
     ports:
-      - 15672:15672
-      - 5672:5672
+      - ${RABBITMQ_PORT}:5672
+      - 15672:15672 #management listener
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
