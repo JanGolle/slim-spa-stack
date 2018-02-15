@@ -1,0 +1,56 @@
+imports:
+  - { resource: parameters.yaml }
+
+services:
+  _defaults:
+    autowire: false
+    autoconfigure: true
+    public: true
+
+  Monolog\Handler\StreamHandler:
+    arguments:
+      - '%app.log_file_path%'
+
+  App\Service\Logger:
+    arguments:
+      - '%app.logger_name%'
+    calls:
+      - ['pushHandler', ['@Monolog\Handler\StreamHandler']]
+
+  App\Client\ElasticaClient:
+    arguments:
+      -
+        connections:
+          -
+            host: '%env(ELASTICSEARCH_HOST)%'
+            port: '%env(ELASTICSEARCH_PORT)%'
+      - null
+      - '@App\Service\Logger'
+
+  App\Client\PredisClient:
+    arguments:
+      -
+        host: '%env(REDIS_HOST)%'
+        port: '%env(REDIS_PORT)%'
+
+  App\Client\MemcachedClient:
+    calls:
+      - ['addServer', ['%env(MEMCACHED_HOST)%', '%env(MEMCACHED_PORT)%', 0]]
+
+  App\Client\AMQPClient:
+    arguments:
+      - '%env(RABBITMQ_HOST)%'
+      - '%env(RABBITMQ_PORT)%'
+      - '%env(RABBITMQ_USER)%'
+      - '%env(RABBITMQ_PASSWORD)%'
+
+  App\Client\DoctrineConnection:
+    factory: 'Doctrine\DBAL\DriverManager::getConnection'
+    arguments:
+      -
+        dbname: '%env(MYSQL_DATABASE)%'
+        user: '%env(MYSQL_USER)%'
+        password: '%env(MYSQL_PASSWORD)%'
+        host: '%env(MYSQL_HOST)%'
+        driver: 'pdo_mysql'
+        wrapperClass: 'App\Client\DoctrineConnection'

@@ -1,0 +1,6 @@
+parameters:
+  slim.settings.displayErrorDetails: !php/const DEBUG
+
+  app.project_path: !php/const PROJECT_PATH
+  app.log_file_path: '%app.project_path%/logs/slimspa.log'
+  app.logger_name: 'API'
