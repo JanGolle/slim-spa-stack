@@ -54,3 +54,28 @@ services:
         host: '%env(MYSQL_HOST)%'
         driver: 'pdo_mysql'
         wrapperClass: 'App\Client\DoctrineConnection'
+      - null
+      - '@Doctrine\Common\EventManager'
+
+  Doctrine\Common\EventManager: ~
+
+  App\Service\EntityManager:
+    factory: 'App\Service\EntityManager::create'
+    arguments:
+      - '@App\Client\DoctrineConnection'
+      - '@app.entity_manager.config'
+      - '@Doctrine\Common\EventManager'
+
+  app.entity_manager.meta_data_driver:
+    class: 'Doctrine\Common\Persistence\Mapping\Driver\AnnotationDriver'
+    factory: 'Doctrine\ORM\Mapping\Driver\AnnotationDriver::create'
+    arguments:
+      -
+        - '%app.project_dir%/src/Entity'
+
+  app.entity_manager.config:
+    class: 'Doctrine\ORM\Configuration'
+    calls:
+      - ['setMetadataDriverImpl', ['@app.entity_manager.meta_data_driver']]
+      - ['setProxyDir', ['%app.cache_dir%/Proxies']]
+      - ['setProxyNamespace', ['Proxies']]
