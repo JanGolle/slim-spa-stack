@@ -16,6 +16,7 @@
         "doctrine/orm": "^2.5",
         "jangolle/slim-symfony-container": "^1.0",
         "symfony/yaml": "^4.0",
+        "symfony/validator": "^4.0",
         "myclabs/php-enum": "^1.5",
         "predis/predis": "1.1.1",
         "ruflin/elastica": "6.0.0",
