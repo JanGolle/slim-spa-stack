@@ -1,1 +1,7 @@
 /vendor/
+/var/cache/*
+/var/logs/*
+.idea
+
+# MUST be the last line of this file
+!.gitkeep

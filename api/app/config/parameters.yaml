@@ -1,0 +1,8 @@
+parameters:
+  slim.settings.displayErrorDetails: !php/const DEBUG
+
+  app.project_dir: !php/const PROJECT_PATH
+  app.cache_dir: '%app.project_dir%/var/cache'
+  app.log_dir: '%app.project_dir%/var/logs'
+  app.log_file_path: '%app.log_dir%/app.log'
+  app.logger_name: 'API'

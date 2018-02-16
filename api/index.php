@@ -8,7 +8,7 @@ require __DIR__ . '/bootstrap.php';
 $app = new App($container);
 
 $routesIterator = new RecursiveIteratorIterator(
-    new RecursiveDirectoryIterator(__DIR__ . '/application/routes', RecursiveDirectoryIterator::SKIP_DOTS)
+    new RecursiveDirectoryIterator(__DIR__ . '/app/routes', RecursiveDirectoryIterator::SKIP_DOTS)
 );
 
 foreach ($routesIterator as $route) {
