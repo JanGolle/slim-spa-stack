@@ -1,0 +1,43 @@
+#!/usr/bin/env php
+<?php
+
+use App\Service\EntityManager;
+use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
+use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Helper\HelperSet;
+use Symfony\Component\Console\Input\ArgvInput;
+
+umask(0000);
+
+set_time_limit(0);
+
+require __DIR__ . '/../app/autoload.php';
+require __DIR__ . '/../bootstrap.php';
+
+$em = $container->get(EntityManager::class);
+$helperSet = new HelperSet(
+    [
+        'db' => new ConnectionHelper($em->getConnection()),
+        'em' => new EntityManagerHelper($em),
+    ]
+);
+
+$input = new ArgvInput();
+
+$application = new Application('Slim SPA stack - API', '1.0');
+$application->setCatchExceptions(true);
+$application->setHelperSet($helperSet);
+
+\Doctrine\ORM\Tools\Console\ConsoleRunner::addCommands($application);
+\Doctrine\DBAL\Tools\Console\ConsoleRunner::addCommands($application);
+\Doctrine\DBAL\Migrations\Tools\Console\ConsoleRunner::addCommands($application);
+
+$application->addCommands(
+        [
+                new \App\Command\CreateUserCommand(),
+                new \App\Command\CreatePostCommand(),
+        ]
+);
+
+$application->run($input);

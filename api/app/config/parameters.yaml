@@ -1,5 +1,5 @@
 parameters:
-  slim.settings.displayErrorDetails: !php/const DEBUG
+  slim.settings.displayErrorDetails: !php/const APP_DEBUG
 
   app.project_dir: !php/const PROJECT_PATH
   app.cache_dir: '%app.project_dir%/var/cache'

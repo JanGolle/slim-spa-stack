@@ -16,7 +16,7 @@ services:
       - ${API_PATH}:/var/www/slimspa/api
       - ./logs/api:/var/www/slimspa/api/var/logs
     environment:
-      DEV_STAGE: ${DEV_STAGE}
+      APP_ENV: ${APP_ENV}
       MYSQL_HOST: ${MYSQL_HOST}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}

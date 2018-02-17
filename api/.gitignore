@@ -3,5 +3,8 @@
 /var/logs/*
 .idea
 
+# Comment or remove line below if you want keep migrations under vcs
+/src/Migration/
+
 # MUST be the last line of this file
 !.gitkeep

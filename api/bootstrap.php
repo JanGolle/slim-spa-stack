@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 require __DIR__ . '/app/autoload.php';
 
-define('DEBUG', in_array(getenv('DEV_STAGE'), ['dev', 'test']) || ($_COOKIE['debug_mode'] ?? 0 === 1));
+define('APP_DEBUG', in_array(getenv('APP_ENV'), ['dev', 'test']) || ($_COOKIE['debug_mode'] ?? 0 === 1));
 define('PROJECT_PATH', __DIR__);
 
 $container = new ContainerBuilder();

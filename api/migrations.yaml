@@ -1,0 +1,4 @@
+name: Doctrine Migrations
+migrations_namespace: App\Migration
+table_name: __migrationVersions
+migrations_directory: src/Migration
